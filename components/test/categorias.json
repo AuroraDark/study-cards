@@ -1,0 +1,21 @@
+[
+    {
+        "categoriaId": "1",
+        "nome": "Inglês"
+    },
+
+    {
+        "categoriaId": "2",
+        "nome": "Português"
+    },
+
+    {
+        "categoriaId": "3",
+        "nome": "Ciências"
+    },
+
+    {
+        "categoriaId": "4",
+        "nome": "Banco de Dados"
+    }
+]

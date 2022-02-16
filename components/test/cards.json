@@ -1,0 +1,26 @@
+[
+    {
+        "cardId": "1",
+        "titulo": "Date",
+        "dica":"Relacionado com tempo e com pessoas.",
+        "cor":"237A57-093028",
+        "categoriaId":"1"
+    },
+
+    {
+        "cardId": "2",
+        "titulo": "Cake",
+        "dica":"É doce.",
+        "cor":"C6426E-642B73",
+        "categoriaId":"1"
+    },
+
+    {
+        "cardId": "3",
+        "titulo": "Umbrela",
+        "dica":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eget diam ut erat porta feugiat. Morbi bibendum quam et dui efficitur, quis consequat mi sagittis. Mauris sit amet facilisis quam. Ut dui urna, elementum vitae accumsan consectetur, imperdiet vitae enim. Morbi nisl enim, rhoncus eu feugiat id, aliquam in nisl. Sed suscipit mi metus, et maximus risus volutpat nec. Etiam accumsan lacus at turpis suscipit, eu pharetra enim congue. Donec nec pellentesque sapien. Duis vulputate ante sed lacus semper dignissim. Etiam sit amet nibh elementum, suscipit sapien eu, dictum dolor. Nunc sit amet posuere nibh, et faucibus libero. Proin ac eros ut ante tempor iaculis eget quis quam. .",
+        "cor":"569FF7-0052D4",
+        "categoriaId":"1"
+    }
+
+]

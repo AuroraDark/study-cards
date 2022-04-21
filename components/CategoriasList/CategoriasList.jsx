@@ -28,19 +28,20 @@ class CategoriasList extends React.Component {
   render() {
     const renderCategoria = ({item}) => {
       return (
-        <Link to={`/home-categoria/${item.id}/${item.cor}/${item.nome}`} component={TouchableOpacity} onPress={() => console.log(item.nome)}>
-            <Categoria nome={item.nome} cor={item.cor} id={item.id} quantCards={item.quantCards}/>
-        </Link>
+          <Categoria nome={item.nome} cor={item.cor} id={item.id} quantCards={item.quantCards}/>
       );
     }
     if (Object.keys(this.state.categorias).length > 0){
     return (
+      <View style={styles.view}>
       <FlatList
+      vertical = {true}
       data={this.state.categorias}
       renderItem={renderCategoria}
       keyExtractor={item => item.id}
       contentContainerStyle={styles.categoriasList}>
       </FlatList>
+      </View>
         
   );
 }else{

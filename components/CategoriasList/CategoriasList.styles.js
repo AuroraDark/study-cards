@@ -7,6 +7,10 @@ export const styles = StyleSheet.create({
     paddingRight: 20 - vw(3),
   },
 
+  view: {
+    height: vh(65),
+  },
+
   semCategoriasMensagem: {
     marginTop: 10,
     color: "#f2f2f2",

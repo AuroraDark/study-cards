@@ -7,7 +7,7 @@ import { Link } from 'react-router-native';
 const BtnAddCard = (props) => {
   
     return (
-      <Link to={`/add-card/${props.categoriaId}/${props.cor}/${props.nome}`} component={TouchableOpacity} style={styles.button}>
+      <Link to={`/add-card/${props.categoriaId}`} component={TouchableOpacity} style={styles.button}>
           <Text style={styles.plus}>+</Text>
       </Link > 
       );

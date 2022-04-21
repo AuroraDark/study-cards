@@ -15,7 +15,7 @@ const Home = (props) => {
       <SearchIcon width={30} height={30} fill={'#f2f2f2'} style={styles.searchIcon}/>
       <BtnFavoritos />
       <View style={styles.cardList}>
-        <CategoriasList/>
+        <CategoriasList />
       </View>
      <BtnAddCategoria />
     </View>

@@ -58,8 +58,7 @@ class Card extends React.Component {
         >
         
         {this.state.isTurned ? verso(this.state): frente(this.state)}
-      {console.log(`/confirm-delete/Card/${this.state.categoriaId}/${this.state.categoriaNome}/${this.state.cor}/${this.state.titulo}/${this.state.id}`)}
-    <Link to={`/confirm-delete/Card/${this.state.categoriaId}/${this.state.categoriaNome}/${this.state.cor}/${this.state.titulo}/${this.state.id}`} style={verso_styles.trash_button}>
+    <Link to={`/confirm-delete/Card/${this.state.categoriaId}/${this.state.id}`} style={verso_styles.trash_button}>
       <TrashIcon width={20} height={20} fill={'#f2f2f2'} />
     </Link>
 
@@ -76,9 +75,9 @@ class Card extends React.Component {
   function frente(card){
     return(
       <View style={styles.scrollView}>
-    <ScrollView>
+    <View>
       <Text style={styles.cardTitulo}>{card.titulo}</Text>
-    </ScrollView>
+    </View>
     </View>
     )
   }
@@ -86,7 +85,7 @@ class Card extends React.Component {
   function verso(card){
     return(
       // Constrói a visualização do card
-        <ScrollView style={verso_styles.scrollView}>
+        <View style={verso_styles.scrollView}>
         <Text style={verso_styles.cardTitulo}>{card.titulo}</Text>
         <Text style={verso_styles.cardResposta}>{card.resposta}</Text>
         {(card.detalhes.length > 0) ? <Text style={verso_styles.cardTitulo}>Detalhes</Text> : null}
@@ -96,7 +95,7 @@ class Card extends React.Component {
                 keyExtractor={item => item.id}
                 contentContainerStyle={styles.cardList}>
              </FlatList>
-        </ScrollView>
+        </View>
     );
   }
   }

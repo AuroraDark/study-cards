@@ -6,26 +6,45 @@ import { LinearGradient } from 'expo-linear-gradient';
 import CategoriasIcon from '../../assets/icons/categorias.svg'
 import { Link } from 'react-router-native';
 import { vw, vh, vmin, vmax } from "react-native-expo-viewport-units";
-import CardsDB from '../../services/sqlite/Card'
-import DetalhesDB from '../../services/sqlite/Detalhes'
+import CardsDB from '../../services/sqlite/Card';
+import DetalhesDB from '../../services/sqlite/Detalhes';
+import CategoriaDB from '../../services/sqlite/Categoria';
 
-const AddCard = () => {
-    // Recebe os parametros vindos do router
-    const { categoriaId, cor, nome } = useParams()
+function withParams(Component) {
+    return props => <Component {...props} params={useParams()} />;
+  }
 
-    // Cria os states para atualizar enquanto o usuário modifica
-    const [titulo, setTitulo] = useState('')
-    const [resposta, setResposta] = useState('')
-    const [tituloDetalhe, setTituloDetalhe] = useState('')
-    const [respostaDetalhe, setRespostaDetalhe] = useState('')
-    const [detalheVisibility, setDetalheVisibility] = useState(false)
-    const [adicionarVisibility, setAdicionarVisibility] = useState(true)
-    const [idDetalhe, setIdDetalhe] = useState(0)
-    const [detalhes, setDetalhes] = useState([])
-    const [detalheSelected, setDetalheSelected] = useState(-1)
-        
-    // Pega as cores para formar o fundo gradiente
-    const gradientColors = getColors(cor)
+class AddCard extends React.Component {
+  
+    state = {
+        titulo: '',
+        resposta: '',
+        tituloDetalhe: '',
+        respostaDetalhe: '',
+        detalheVisibility: false,
+        adicionarVisibility: true,
+        idDetalhe: 0,
+        detalhes: [],
+        detalheSelected: -1,
+        categoria: {},
+        categoriaId: this.props.params.categoriaId
+    }
+
+    componentDidMount() {
+        this.getCategoria(this.state.categoriaId);
+      }
+      
+      getCategoria = (idCategoria) => {
+        CategoriaDB.findCategoria(idCategoria).then(res => {
+          this.setState({
+            categoria: res,
+          });
+        }).catch(err=>err);
+      }
+
+    render (){
+    
+    const { titulo, resposta, tituloDetalhe, respostaDetalhe, detalheVisibility, adicionarVisibility,idDetalhe, detalhes, detalheSelected, categoria, categoriaId } = this.state
 
     const geraFlatList = () => {
         console.log(detalhes.length)
@@ -45,7 +64,7 @@ const AddCard = () => {
          }
     }
 
-    function setaDetalhes(){
+    const setaDetalhes = () => {
         if (detalheVisibility){
             return(
                 <View style={styles.detalhe} >
@@ -54,7 +73,7 @@ const AddCard = () => {
                 placeholder="Título do detalhe..."
                 placeholderTextColor="#f2f2f2"
                 multiline={true}
-                onChangeText={novoTitulo => setTituloDetalhe(novoTitulo)}
+                onChangeText={novoTitulo => this.setState({tituloDetalhe: novoTitulo})}
                 />
                 <TouchableOpacity style={styles.close_detalhe} onPress={() => escondeDetalhe()}>
                     <Text style={[styles.btn_card_text_x]}>x</Text>
@@ -66,14 +85,14 @@ const AddCard = () => {
                     textAlignVertical="top"
                     multiline={true}
                     numberOfLines={3}
-                    onChangeText={novaResposta => setRespostaDetalhe(novaResposta)}
+                    onChangeText={novaResposta => this.setState({respostaDetalhe: novaResposta})}
                 />
             </View>
             )
         }
     }
 
-    function setaButtonAdicionar(){
+    const setaButtonAdicionar = () => {
         if(adicionarVisibility && detalheSelected == -1 && !detalheVisibility){
             return(
                 <TouchableOpacity style={[styles.btn_card, {backgroundColor: "#f2f2f2"}]} title="Adicionar Detalhe" onPress={() => exibeDetalhe()}>
@@ -83,7 +102,7 @@ const AddCard = () => {
         }
     }
 
-    function exibeSalvarDetalhe(){
+    const exibeSalvarDetalhe = () =>{
         if (detalheVisibility){
             return (
                 <TouchableOpacity style={[styles.btn_card, {backgroundColor: "#16a085"}]} title="Salvar Detalhe" onPress={() => salvarDetalhe()}>
@@ -94,44 +113,44 @@ const AddCard = () => {
        
     }
 
-    function exibeDetalhe(){
-        setAdicionarVisibility(false)
-        setDetalheVisibility(true)
+    const exibeDetalhe = () =>{
+        this.setState({adicionarVisibility: false})
+        this.setState({detalheVisibility: true})
     }
 
-    function escondeDetalhe(){
-        setAdicionarVisibility(true)
-        setDetalheVisibility(false)
-        setTituloDetalhe('')
-        setRespostaDetalhe('')
+    const escondeDetalhe = () =>{
+        this.setState({adicionarVisibility: true})
+        this.setState({detalheVisibility: false})
+        this.setState({tituloDetalhe: ''})
+        this.setState({respostaDetalhe: ''})
     }
 
-    function salvarDetalhe() {
+    const salvarDetalhe = () => {
         var novo_detalhe = {
             id: idDetalhe,
             titulo: tituloDetalhe,
             resposta: respostaDetalhe
         }
-        setDetalhes(detalhes.concat([novo_detalhe]))
-        setIdDetalhe(novo_detalhe.id + 1)
-        setTituloDetalhe('')
-        setRespostaDetalhe('')
-        setAdicionarVisibility(true)
-        setDetalheVisibility(false)
+        this.setState({detalhes: detalhes.concat([novo_detalhe])})
+        this.setState({idDetalhe: novo_detalhe.id + 1})
+        this.setState({tituloDetalhe: ''})
+        this.setState({respostaDetalhe: ''})
+        this.setState({adicionarVisibility: true})
+        this.setState({detalheVisibility: false})
     }
 
-    function deletarDetalhe(){
+    const deletarDetalhe = () => {
         var indexDetalhe = detalhes.findIndex(detalhe => detalhe.id == detalheSelected);
-        setDetalhes(detalhes.filter((_, i) => i !== indexDetalhe));
-        setDetalheSelected(-1)
+        this.setState({detalhes: detalhes.filter((_, i) => i !== indexDetalhe)})
+        this.setState({detalheSelected: -1})
     }
 
-    function showMenuDetalhe(){
+    const showMenuDetalhe = () => {
         if (detalheSelected != -1){
             return (
-                    <TouchableOpacity style={[styles.btn_card, {backgroundColor: "#c0392b"}]} onPress={() => deletarDetalhe()}>
-                        <Text style={[styles.btn_card_text]}>Deletar</Text>
-                    </TouchableOpacity>
+                <TouchableOpacity style={[styles.btn_card, {backgroundColor: "#c0392b"}]} onPress={() => deletarDetalhe()}>
+                    <Text style={[styles.btn_card_text]}>Deletar</Text>
+                </TouchableOpacity>
             );
         }
     }
@@ -144,11 +163,11 @@ const AddCard = () => {
             isSelected = true
         }
 
-        function selecionaDetalhe(){
+        const selecionaDetalhe = () => {
             if (detalheSelected == item.id){
-                setDetalheSelected(-1)
+                this.setState({detalheSelected: -1})
             }else{
-                setDetalheSelected(item.id)
+                this.setState({detalheSelected: item.id})
             }
         }
         return (
@@ -159,60 +178,68 @@ const AddCard = () => {
         );
     }
     
-    return (
+    if (categoria.id != undefined) {
+        return (
+            // Constrói a visualização do card
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.titulo}>Novo Card</Text>
+                    <View style={styles.categoria}>
+                        <CategoriasIcon width={20} height={20} fill={'#f2f2f2'} />
+                        <Text style={styles.categoryText}>{categoria.nome}</Text>
+                  </View>
+                </View>
+              
+            <View style={[styles.cardBody, styles.elevation]}>
+                <LinearGradient
+                    // Background Linear Gradient
+                    colors={getColors(categoria.cor)}
+                    style={[styles.cardBody]}
+                >
+                    <ScrollView style={styles.scrollView}>
+                    <TextInput style={styles.cardTitulo} 
+                        placeholder="Título da questão..."
+                        placeholderTextColor="#f2f2f2"
+                        multiline={true}
+                        onChangeText={novoTitulo =>  this.setState({titulo:novoTitulo})}
+                        />
+                    <TextInput style={styles.cardResposta} 
+                        placeholder="Resposta..."
+                        placeholderTextColor="#f2f2f2"
+                        textAlignVertical="top"
+                        multiline={true}
+                        numberOfLines={3}
+                        onChangeText={novaResposta => this.setState({resposta:novaResposta})}
+                    />
+                    
+                    {geraFlatList()}
+                    {setaDetalhes()}
+        
+                    </ScrollView>
+                    
+                {exibeSalvarDetalhe()}
+                {setaButtonAdicionar()}
+                {showMenuDetalhe()}
+                </LinearGradient>
+            </View>
+            <View style={styles.menu_footer}>
+                <Link to={`/home-categoria/${categoriaId}`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_right]} onPress={() => insertCard(titulo, resposta, categoriaId, detalhes)}>
+                    <Text style={styles.btn_text}>Salvar</Text>
+                </Link>
+                <Link to={`/home-categoria/${categoriaId}`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_left]}>
+                    <Text style={styles.btn_text}>Cancelar</Text>
+                </Link>
+            </View>
+            </View>
+            )
+    }else{
+        return(
+            <View style={styles.container}/>
+        )
+    }
 
-    // Constrói a visualização do card
-    <View style={styles.container}>
-        <View style={styles.header}>
-            <Text style={styles.titulo}>Novo Card</Text>
-            <View style={styles.categoria}>
-                <CategoriasIcon width={20} height={20} fill={'#f2f2f2'} />
-                <Text style={styles.categoryText}>{nome}</Text>
-          </View>
-        </View>
-      
-    <View style={[styles.cardBody, styles.elevation]}>
-        <LinearGradient
-            // Background Linear Gradient
-            colors={gradientColors}
-            style={[styles.cardBody]}
-        >
-            <ScrollView style={styles.scrollView}>
-            <TextInput style={styles.cardTitulo} 
-                placeholder="Título da questão..."
-                placeholderTextColor="#f2f2f2"
-                multiline={true}
-                onChangeText={novoTitulo => setTitulo(novoTitulo)}
-                />
-            <TextInput style={styles.cardResposta} 
-                placeholder="Resposta..."
-                placeholderTextColor="#f2f2f2"
-                textAlignVertical="top"
-                multiline={true}
-                numberOfLines={3}
-                onChangeText={novaResposta => setResposta(novaResposta)}
-            />
-            
-            {geraFlatList()}
-            {setaDetalhes()}
+    }
 
-            </ScrollView>
-            
-        {exibeSalvarDetalhe()}
-        {setaButtonAdicionar()}
-        {showMenuDetalhe()}
-        </LinearGradient>
-    </View>
-    <View style={styles.menu_footer}>
-        <Link to={`/home-categoria/${categoriaId}/${cor}/${nome}`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_right]} onPress={() => insertCard(titulo, resposta, categoriaId, detalhes)}>
-            <Text style={styles.btn_text}>Salvar</Text>
-        </Link>
-        <Link to={`/home-categoria/${categoriaId}/${cor}/${nome}`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_left]}>
-            <Text style={styles.btn_text}>Cancelar</Text>
-        </Link>
-    </View>
-    </View>
-    )
 }
 
 /** Transforma as cores em HEXADECIMAL para construir o gradiente */
@@ -259,4 +286,4 @@ function insertDetalhes(detalhes, cardId){
 }
 }
 
-export default AddCard
+export default withParams(AddCard)

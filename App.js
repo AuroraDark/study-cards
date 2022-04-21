@@ -27,19 +27,13 @@ export default function App() {
       <NativeRouter>
         <Routes>
           <Route exact path="/" element={<Home />} />
-          <Route
-            path="/home-categoria/:id/:cor/:nome"
-            element={<HomeCategoria />}
-          />
-          <Route
-            path="/add-card/:categoriaId/:cor/:nome"
-            element={<AddCard />}
-          />
+          <Route path="/home-categoria/:id" element={<HomeCategoria />} />
+          <Route path="/add-card/:categoriaId" element={<AddCard />} />
 
           <Route path="/add-categoria" element={<AddCategoria />} />
 
           <Route
-            path="/confirm-delete/:who/:categoriaId/:categoriaNome/:cor/:nome/:id/"
+            path="/confirm-delete/:who/:categoriaId/:id"
             element={<ConfirmDelete />}
           />
         </Routes>

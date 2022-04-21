@@ -2,30 +2,67 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { styles } from './ConfirmDelete.styles';
 //import { BtnAddWrapper } from './BtnAdd.styles';
-import { useParams, Link } from 'react-router-native';
-import CardsDB from '../../services/sqlite/Card'
 import DetalhesDB from '../../services/sqlite/Detalhes'
+import CategoriaDB from '../../services/sqlite/Categoria'
+import CardsDB from '../../services/sqlite/Card'
+import { Link, useParams } from 'react-router-native'
 
-const ConfirmDelete = (props) => {
+function withParams(Component) {
+  return props => <Component {...props} params={useParams()} />;
+}
 
-  const { who, categoriaId, categoriaNome, cor, nome, id } = useParams()
-  console.log(props)
-  "/home-categoria/:id/:cor/:nome"
+class ConfirmDelete extends React.Component {
+
+  state = {
+    who: this.props.params.who,
+    categoriaId: this.props.params.categoriaId,
+    categoria: {},
+    card: {},
+    id: this.props.params.id
+  }
+
+  componentDidMount() {
+    this.getCategoria(this.state.categoriaId);
+  }
+  
+  getCategoria = (categoriaId) => {
+    CategoriaDB.findCategoria(categoriaId).then(res => {
+      this.setState({
+        categoria: res,
+      });
+      if(this.state.who == "Card"){
+        this.getCard(this.state.id)
+      }
+    }).catch(err=>err);
+  }
+
+  getCard = (id) => {
+    CardsDB.findCard(id).then(res => {
+      this.setState({
+        card: res,
+      });
+      console.log(this.state.card)
+    }).catch(err=>err);
+  }
+
+  render() {
+  const {who, categoriaId, categoria, card, id} = this.state
   return(
     <View style={styles.backgroud}>
       <View style={styles.modal}>
-        <Text style={styles.categoryText}>Deseja realmente excluir {(who == "Card") ? `o card "${nome}"?` : `a categoria "${nome}"?`}</Text>
+        <Text style={styles.categoryText}>Deseja realmente excluir {(who == "Card") ? `o card "${card.titulo}"?` : `a categoria "${categoria.nome}"?`}</Text>
    <View style={styles.btn_container}>
-    <Link to={(who == "Card") ? `/home-categoria/${categoriaId}/${cor}/${categoriaNome}` : `/home-categoria/${id}/${cor}/${categoriaNome}`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_left]} onPress={() => (who == "Card") ? deleteCard(id) : null}>
+    <Link to={(who == "Card") ? `/home-categoria/${categoriaId}` : `/`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_left]} onPress={() => (who == "Card") ? deleteCard(id) : null}>
         <Text style={styles.btn_text}>Sim</Text>
     </Link>
-    <Link to={who == "Card" ? `/home-categoria/${categoriaId}/${cor}/${categoriaNome}` : `/home-categoria/${id}/${cor}/${categoriaNome}`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_right]}>
+    <Link to={who == "Card" ? `/home-categoria/${categoriaId}` : `/`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_right]}>
         <Text style={styles.btn_text}>Não, voltar</Text>
     </Link>
    </View>
       </View>
   </View>
-  );
+  )
+}
 }
 
 
@@ -55,4 +92,4 @@ function deleteDetalhes(cardId){
   
 }
 
-export default ConfirmDelete;
+export default withParams(ConfirmDelete);

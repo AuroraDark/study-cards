@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   cardBody: {
     flex: 1,
     width: vw(80),
-    height: vh(65),
+    height: vh(68),
     borderRadius: 40,
     padding: 20,
     marginLeft: vw(3),

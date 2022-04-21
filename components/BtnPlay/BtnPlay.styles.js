@@ -6,15 +6,14 @@ export const styles = StyleSheet.create({
     backgroundColor: "#f2f2f2",
     display: "flex",
     flexDirection: "row",
-    padding: 10,
-    paddingLeft: 20,
-    paddingRight: 20,
+
+    padding: 28,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 50,
     position: "absolute",
     bottom: 20,
-    left: 20,
+    right: 20,
   },
 
   view: {

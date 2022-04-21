@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Study Cards",
-    "slug": "Study Cards",
+    "slug": "study-cards",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

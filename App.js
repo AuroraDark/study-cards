@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import Home from "./components/Home/Home";
-
+import React from "react";
 import { Text, View, StyleSheet, StatusBar } from "react-native";
+import { NativeRouter, Route, Routes } from "react-router-native";
 import AppLoading from "expo-app-loading";
 import {
   useFonts,
@@ -9,11 +8,10 @@ import {
   Epilogue_500Medium,
   Epilogue_700Bold,
 } from "@expo-google-fonts/epilogue";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-const Stack = createNativeStackNavigator();
+import Home from "./components/Home/Home";
+import HomeCategoria from "./components/HomeCategoria/HomeCategoria";
+import AddCard from "./components/AddCard/AddCard";
+import ConfirmDelete from "./components/ConfirmDelete/ConfirmDelete";
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -21,25 +19,28 @@ export default function App() {
     Epilogue_500Medium,
     Epilogue_700Bold,
   });
-
   if (!fontsLoaded) {
     return <AppLoading />;
   } else {
     return (
-      <NavigationContainer>
-        <StatusBar hidden />
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          <Stack.Screen
-            name="Home"
-            component={Home}
-            initialParams={{ categoryId: "a" }}
+      <NativeRouter>
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route
+            path="/home-categoria/:id/:cor/:nome"
+            element={<HomeCategoria />}
           />
-        </Stack.Navigator>
-      </NavigationContainer>
+          <Route
+            path="/add-card/:categoriaId/:cor/:nome"
+            element={<AddCard />}
+          />
+
+          <Route
+            path="/confirm-delete/:who/:categoriaId/:categoriaNome/:cor/:nome/:id/"
+            element={<ConfirmDelete />}
+          />
+        </Routes>
+      </NativeRouter>
     );
   }
 }

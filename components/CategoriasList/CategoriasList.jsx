@@ -1,64 +1,54 @@
-import React, { PureComponent } from 'react';
-import { View, Text } from 'react-native';
-import PropTypes from 'prop-types';
-import * as styles from './CategoriasList.styles';
-//import { CategoriasListWrapper } from './CategoriasList.styles';
+import React from 'react';
+import { View, Text, ScrollView, FlatList, TouchableOpacity } from 'react-native';
+import { styles } from './CategoriasList.styles';
+//import { CardListWrapper } from './CardList.styles';
+import Categoria from '../Categoria/Categoria';
+import CategoriaDB from '../../services/sqlite/Categoria'
+import CardDB from '../../services/sqlite/Card'
+import { Link } from 'react-router-native'
 
-class CategoriasList extends PureComponent { 
-  constructor(props) {
-    super(props);
+class CategoriasList extends React.Component {
 
-    this.state = {
-      hasError: false,
-    };
+  state = {
+    categorias: [],
   }
 
-  componentWillMount = () => {
-    console.log('CategoriasList will mount');
+  componentDidMount() {
+    this.getCategorias();
   }
 
-  componentDidMount = () => {
-    console.log('CategoriasList mounted');
+  getCategorias = () => {
+    CategoriaDB.allCategorias().then(res => {
+      this.setState({
+        categorias: res,
+      });
+    });
   }
 
-  componentWillReceiveProps = (nextProps) => {
-    console.log('CategoriasList will receive props', nextProps);
-  }
-
-  componentWillUpdate = (nextProps, nextState) => {
-    console.log('CategoriasList will update', nextProps, nextState);
-  }
-
-  componentDidUpdate = () => {
-    console.log('CategoriasList did update');
-  }
-
-  componentWillUnmount = () => {
-    console.log('CategoriasList will unmount');
-  }
-
-  render () {
-    if (this.state.hasError) {
+  render() {
+    const renderCategoria = ({item}) => {
       return (
-        <View style={styles.CategoriasListWrapper}>
-          <Text>Something went wrong.</Text>
-        </View>
+        <Link to={`/home-categoria/${item.id}/${item.cor}/${item.nome}`} component={TouchableOpacity} onPress={() => console.log(item.nome)}>
+            <Categoria nome={item.nome} cor={item.cor} id={item.id} quantCards={item.quantCards}/>
+        </Link>
       );
     }
+    if (Object.keys(this.state.categorias).length > 0){
     return (
-      <View style={styles.CategoriasListWrapper}>
-        <Text>Test content</Text>
-      </View>
-    );
+      <FlatList
+      data={this.state.categorias}
+      renderItem={renderCategoria}
+      keyExtractor={item => item.id}
+      contentContainerStyle={styles.categoriasList}>
+      </FlatList>
+        
+  );
+}else{
+  return(
+  <Text style={styles.semCategoriasMensagem}>Crie uma nova categoria</Text>
+  );
   }
+  }  
 }
-
-CategoriasList.propTypes = {
-  // bla: PropTypes.string,
-};
-
-CategoriasList.defaultProps = {
-  // bla: 'test',
-};
 
 export default CategoriasList;

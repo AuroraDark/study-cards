@@ -140,7 +140,7 @@ const allCardsCategory = (categoriaId) => {
         //-----------------------
         (_, { rows }) => {
           if (rows.length > 0) resolve(rows._array);
-          else reject("Obj not found: categoriaId=" + categoriaId); // nenhum registro encontrado
+          else resolve([]); // nenhum registro encontrado
         },
         (_, error) => reject(error) // erro interno em tx.executeSql
       );

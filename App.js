@@ -12,6 +12,7 @@ import Home from "./components/Home/Home";
 import HomeCategoria from "./components/HomeCategoria/HomeCategoria";
 import AddCard from "./components/AddCard/AddCard";
 import ConfirmDelete from "./components/ConfirmDelete/ConfirmDelete";
+import AddCategoria from "./components/AddCategoria/AddCategoria";
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -34,6 +35,8 @@ export default function App() {
             path="/add-card/:categoriaId/:cor/:nome"
             element={<AddCard />}
           />
+
+          <Route path="/add-categoria" element={<AddCategoria />} />
 
           <Route
             path="/confirm-delete/:who/:categoriaId/:categoriaNome/:cor/:nome/:id/"

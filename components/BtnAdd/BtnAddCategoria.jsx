@@ -6,7 +6,7 @@ import { Link } from 'react-router-native';
 
 const BtnAddCategoria = (props) => {
     return (
-      <Link to={`/`} component={TouchableOpacity} style={styles.button_categoria}>
+      <Link to={`/add-categoria`} component={TouchableOpacity} style={styles.button_categoria}>
           <Text style={styles.plus_categoria}>+</Text>
       </Link > 
       );   

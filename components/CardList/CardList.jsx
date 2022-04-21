@@ -10,6 +10,7 @@ import CardsDB from '../../services/sqlite/Card'
 class CardList extends React.Component {
   
   state = {
+    cards: [],
     categoriaId: this.props.categoriaId,
     categoriaNome: this.props.categoriaNome,
     cor: this.props.cor,
@@ -32,16 +33,23 @@ class CardList extends React.Component {
         <Card titulo={item.titulo} resposta={item.resposta} cor={this.state.cor} id={item.id} categoriaId={item.categoriaId} categoriaNome={this.state.categoriaNome} />
       );
     }
+    if (Object.keys(this.state.cards).length <= 0){
+      return(
+      <Text style={styles.semCategoriasMensagem}>Crie um novo card.</Text>
+      );
+    }
+
     return (
-        <FlatList
-        horizontal = {true}
-        data={this.state.cards}
-        extraData={this.state}
-        renderItem={renderCard}
-        keyExtractor={item => item.id}
-        contentContainerStyle={styles.cardList}>
-        </FlatList>
-    );
+      <FlatList
+      horizontal = {true}
+      data={this.state.cards}
+      extraData={this.state}
+      renderItem={renderCard}
+      keyExtractor={item => item.id}
+      contentContainerStyle={styles.cardList}>
+      </FlatList>
+        
+  );
   }
 }
 

@@ -2,12 +2,79 @@ import { StyleSheet } from "react-native";
 import { vw, vh, vmin, vmax } from "react-native-expo-viewport-units";
 
 export const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
     backgroundColor: "#1a1a1a",
     width: "100%",
     height: "100%",
+  },
+
+  subtitulo: {
+    color: "#888",
+    textAlign: "left",
+    fontFamily: "Epilogue_500Medium",
+    marginBottom: 0,
+    fontSize: 20,
+    marginLeft: 20,
+    marginRight: 20,
+  },
+
+  color_card: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
+  cardText: {
+    marginTop: vh(8),
+    color: "#f2f2f2",
+    textAlign: "center",
+    fontFamily: "Epilogue_500Medium",
+    fontSize: 30,
+  },
+
+  card_example: {
+    width: vw(59),
+    height: vh(50),
+    marginRight: 20,
+    borderRadius: 30,
+  },
+
+  colorItem: {
+    marginTop: 10,
+    borderRadius: 10,
+    width: 60,
+    height: 60,
+  },
+
+  color: {
+    flex: 1,
+    borderRadius: 8,
+    padding: 20,
+    margin: 0,
+    display: "flex",
+    flexDirection: "column",
     alignItems: "center",
+  },
+
+  colorsList: {
+    alignItems: "center",
+  },
+
+  colorText: {
+    color: "#f2f2f2",
+    fontFamily: "Epilogue_500Medium",
+    fontSize: 20,
+    textAlign: "center",
+  },
+
+  color_container: {
+    borderRadius: 8,
+    marginLeft: 20,
+    padding: 15,
+    width: vw(25),
+    height: vh(50),
+    backgroundColor: "#2a2a2a",
   },
 
   header_detalhe: {
@@ -48,6 +115,9 @@ export const styles = StyleSheet.create({
   menu_footer: {
     height: vh(10),
     width: "100%",
+    position: "absolute",
+    backgroundColor: "#1a1a1a",
+    bottom: 0,
   },
 
   btn_text: {
@@ -119,39 +189,20 @@ export const styles = StyleSheet.create({
     fontSize: 23,
   },
 
-  categoryItem: {
-    marginTop: 10,
-    borderRadius: 10,
-    width: "100%",
-  },
-
-  cardBody: {
-    flex: 1,
-    width: vw(90),
-    height: vh(70),
-    borderRadius: 40,
-    padding: 20,
-    marginLeft: vw(3),
-    marginRight: vw(3),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-
   scrollView: {
     marginTop: "5%",
     marginBottom: 70,
   },
 
-  cardTitulo: {
-    marginTop: 10,
-    width: vw(70),
+  cardNome: {
+    margin: 20,
     color: "#f2f2f2",
     textAlign: "left",
-    fontFamily: "Epilogue_700Bold",
+    fontFamily: "Epilogue_500Medium",
     fontSize: 25,
-    //backgroundColor: "#1a1a1a80",
+    backgroundColor: "#2a2a2a",
     borderRadius: 8,
+    padding: 10,
     //borderWidth: 1,
     //borderColor: "#f2f2f2",
   },

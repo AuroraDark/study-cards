@@ -138,8 +138,8 @@ const removeCategoria = (id) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "DELETE FROM categoria WHERE id=?; DELETE FROM cards WHERE categoriaId=?",
-        [id, id],
+        "DELETE FROM categorias WHERE id=?;",
+        [id],
         //-----------------------
         (_, { rowsAffected }) => {
           resolve(rowsAffected);

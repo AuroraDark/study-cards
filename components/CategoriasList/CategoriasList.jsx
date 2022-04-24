@@ -17,6 +17,12 @@ class CategoriasList extends React.Component {
     this.getCategorias();
   }
 
+  componentDidUpdate(prevState){
+    if (this.state.categorias !== prevState.categorias) {
+      this.getCategorias();
+    }
+  }
+
   getCategorias = () => {
     CategoriaDB.allCategorias().then(res => {
       this.setState({
@@ -46,7 +52,11 @@ class CategoriasList extends React.Component {
   );
 }else{
   return(
-  <Text style={styles.semCategoriasMensagem}>Crie uma nova categoria</Text>
+    <View style={styles.msgCriar}>
+    <Text style={styles.semCategoriasMensagem}>Clique no</Text>
+    <Text style={styles.exampleAddBtn}>+</Text>
+    <Text style={styles.semCategoriasMensagem}>para adicionar uma categoria</Text>
+    </View>
   );
   }
   }  

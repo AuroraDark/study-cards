@@ -6,10 +6,10 @@ import Play from '../../assets/icons/play-solid.svg'
 import { Link } from 'react-router-native'
 
 
-const BtnCategorias = (props) => { 
+const BtnPlay = (props) => { 
   
   return (
-    <Link to='/' component={TouchableOpacity} style={styles.button}>
+    <Link to={`/play-cards/${props.categoriaId}/-1`} component={TouchableOpacity} style={styles.button}>
       <View style={styles.view}> 
         <Play width={35} height={35} fill={'#1A1A1A'} />
       </View>
@@ -17,4 +17,4 @@ const BtnCategorias = (props) => {
   );
 }
 
-export default BtnCategorias;
+export default BtnPlay;

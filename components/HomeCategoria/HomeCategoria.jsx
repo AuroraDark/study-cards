@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { styles } from './HomeCategoria.styles';
 import BtnAddCard from '../BtnAdd/BtnAddCard';
 import BtnPlay from '../BtnPlay/BtnPlay';
@@ -38,14 +38,14 @@ class HomeCategoria extends React.Component {
       if (this.state.categoria.id != undefined) {
         return (
           <View style={styles.home}>
-            <Text style={styles.categoryText}>{this.state.categoria.nome}</Text>
+            <ScrollView horizontal style={styles.scrollView}><Text style={styles.categoryText}>{this.state.categoria.nome}</Text></ScrollView>
             <SearchIcon width={30} height={30} fill={'#f2f2f2'} style={styles.searchIcon}/>
             <View style={styles.cardList}>
-              <CardList categoriaId={this.state.categoria.id} cor={this.state.categoria.cor} categoriaNome={this.state.categoria.nome}/>
+              <CardList categoriaId={this.state.categoria.id} cor={this.state.categoria.cor}/>
             </View>
             <BtnCategorias /> 
             <BtnAddCard categoriaId={this.state.categoria.id}/>
-            <BtnPlay />
+            <BtnPlay categoriaId={this.state.categoria.id} />
           </View>
         );
       }else{

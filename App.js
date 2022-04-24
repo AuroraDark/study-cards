@@ -1,6 +1,7 @@
 import React from "react";
-import { Text, View, StyleSheet, StatusBar } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { NativeRouter, Route, Routes } from "react-router-native";
+import { StatusBar } from "expo-status-bar";
 import AppLoading from "expo-app-loading";
 import {
   useFonts,
@@ -13,6 +14,9 @@ import HomeCategoria from "./components/HomeCategoria/HomeCategoria";
 import AddCard from "./components/AddCard/AddCard";
 import ConfirmDelete from "./components/ConfirmDelete/ConfirmDelete";
 import AddCategoria from "./components/AddCategoria/AddCategoria";
+import { SafeAreaView } from "react-native-safe-area-context";
+import * as NavigationBar from "expo-navigation-bar";
+import PlayCards from "./components/PlayCards/PlayCards";
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -20,24 +24,36 @@ export default function App() {
     Epilogue_500Medium,
     Epilogue_700Bold,
   });
+
+  NavigationBar.setBackgroundColorAsync("#111");
+  NavigationBar.setButtonStyleAsync("light");
+
   if (!fontsLoaded) {
     return <AppLoading />;
   } else {
     return (
-      <NativeRouter>
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route path="/home-categoria/:id" element={<HomeCategoria />} />
-          <Route path="/add-card/:categoriaId" element={<AddCard />} />
+      <SafeAreaView style={styles.container}>
+        <NativeRouter>
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route path="/home-categoria/:id" element={<HomeCategoria />} />
+            <Route path="/add-card/:categoriaId" element={<AddCard />} />
 
-          <Route path="/add-categoria" element={<AddCategoria />} />
+            <Route path="/add-categoria" element={<AddCategoria />} />
 
-          <Route
-            path="/confirm-delete/:who/:categoriaId/:id"
-            element={<ConfirmDelete />}
-          />
-        </Routes>
-      </NativeRouter>
+            <Route
+              path="/confirm-delete/:who/:categoriaId/:id"
+              element={<ConfirmDelete />}
+            />
+
+            <Route
+              path="/play-cards/:categoriaId/:prevCard"
+              element={<PlayCards />}
+            />
+          </Routes>
+        </NativeRouter>
+        <StatusBar style="light" backgroundColor="#1A1A1A" hidden={false} />
+      </SafeAreaView>
     );
   }
 }

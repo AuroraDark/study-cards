@@ -1,19 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, FlatList } from 'react-native';
-import { styles } from './Card.styles';
+import { styles } from './PlayCards.styles';
 import { verso_styles } from './Verso.styles';
 //import { CardWrapper } from './Card.styles';
 import { LinearGradient } from 'expo-linear-gradient';
-import LampIconOn from '../../assets/icons/lamp-on.svg';
-import LampIconOff from '../../assets/icons/lamp-off.svg';
-import StarIcon from '../../assets/icons/star.svg';
-import TurnCardIcon  from '../../assets/icons/repeat-solid.svg'
-import TrashIcon  from '../../assets/icons/trash-solid.svg'
-import CardsDB from '../../services/sqlite/Card'
+import TurnCardIcon  from '../../assets/icons/arrows-rotate-solid.svg'
 import DetalhesDB from '../../services/sqlite/Detalhes'
-import { Link } from 'react-router-native';
 
-class Card extends React.Component {
+class CardPlay extends React.Component {
 
   state = {
     detalhes: [],
@@ -26,6 +20,7 @@ class Card extends React.Component {
   }
 
   componentDidMount() {
+    console.log("Montou")
     this.getDetalhes();
   }
 
@@ -49,7 +44,7 @@ class Card extends React.Component {
 }
   return (
     
-      <View style={[styles.cardBody, styles.elevation]}>
+    <View style={[styles.elevation, styles.cardBody]}>
         <LinearGradient
           // Background Linear Gradient
           colors={gradientColors}
@@ -57,9 +52,6 @@ class Card extends React.Component {
         >
         
         {this.state.isTurned ? verso(this.state): frente(this.state)}
-    <Link to={`/confirm-delete/Card/${this.state.categoriaId}/${this.state.id}`} style={verso_styles.trash_button}>
-      <TrashIcon width={20} height={20} fill={'#f2f2f2'} />
-    </Link>
 
     <TouchableOpacity style={verso_styles.verse_button} onPress={() => this.setState({
       isTurned: this.state.isTurned ? false : true,
@@ -107,4 +99,4 @@ function getColors(colorStr){
 
 }
 
-export default Card;
+export default CardPlay;

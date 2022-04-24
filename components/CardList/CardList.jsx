@@ -10,15 +10,22 @@ import CardsDB from '../../services/sqlite/Card'
 class CardList extends React.Component {
   
   state = {
-    cards: 0,
+    cards: null,
     categoriaId: this.props.categoriaId,
-    categoriaNome: this.props.categoriaNome,
     cor: this.props.cor,
   }
 
   componentDidMount() {
     this.getCards(this.state.categoriaId);
   }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.categoriaId != prevProps.categoriaId){
+      this.getCards(this.state.categoriaId);
+    }
+    
+  }
+
 
   getCards = (categoriaId) => {
     console.log(categoriaId)
@@ -31,12 +38,16 @@ class CardList extends React.Component {
   render(){
     const renderCard = ({item}) => {
       return (
-        <Card titulo={item.titulo} resposta={item.resposta} cor={this.state.cor} id={item.id} categoriaId={item.categoriaId} categoriaNome={this.state.categoriaNome} />
+        <Card titulo={item.titulo} resposta={item.resposta} cor={this.state.cor} id={item.id} categoriaId={item.categoriaId} />
       );
     }
-    if (this.state.cards != 0 && Object.keys(this.state.cards).length <= 0){
+    if (this.state.cards != null && Object.keys(this.state.cards).length <= 0){
       return(
-      <Text style={styles.semCategoriasMensagem}>Crie um novo card.</Text>
+        <View style={styles.msgCriar}>
+      <Text style={styles.semCategoriasMensagem}>Clique no</Text>
+      <Text style={styles.exampleAddBtn}>+</Text>
+      <Text style={styles.semCategoriasMensagem}>para adicionar um card</Text>
+      </View>
       );
     }
 

@@ -5,6 +5,7 @@ import { styles } from './ConfirmDelete.styles';
 import DetalhesDB from '../../services/sqlite/Detalhes'
 import CategoriaDB from '../../services/sqlite/Categoria'
 import CardsDB from '../../services/sqlite/Card'
+import PlayDB from '../../services/sqlite/PlayDB'
 import { Link, useParams } from 'react-router-native'
 
 function withParams(Component) {
@@ -30,6 +31,7 @@ class ConfirmDelete extends React.Component {
       this.setState({
         categoria: res,
       });
+      console.log(res)
       if(this.state.who == "Card"){
         this.getCard(this.state.id)
       }
@@ -50,9 +52,9 @@ class ConfirmDelete extends React.Component {
   return(
     <View style={styles.backgroud}>
       <View style={styles.modal}>
-        <Text style={styles.categoryText}>Deseja realmente excluir {(who == "Card") ? `o card "${card.titulo}"?` : `a categoria "${categoria.nome}"?`}</Text>
+        <Text style={styles.categoryText}>Deseja realmente excluir {(who == "Card") ? `o card "${card.titulo}"?` : `o deck "${categoria.nome}"? (Também excluirá todos os cards dele!)`}</Text>
    <View style={styles.btn_container}>
-    <Link to={(who == "Card") ? `/home-categoria/${categoriaId}` : `/`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_left]} onPress={() => (who == "Card") ? deleteCard(id) : null}>
+    <Link to={(who == "Card") ? `/home-categoria/${categoriaId}` : `/`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_left]} onPress={() => (who == "Card") ? deleteCard(id) : deleteCategoria(categoriaId)}>
         <Text style={styles.btn_text}>Sim</Text>
     </Link>
     <Link to={who == "Card" ? `/home-categoria/${categoriaId}` : `/`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_right]}>
@@ -72,12 +74,33 @@ function deleteCard(cardId){
   //delete
   CardsDB.removeCard(cardId)
   .then( id => {
-      console.log('Card deleted with id: '+ id)
+      console.log('Cards deleted: '+ id)
       deleteDetalhes(cardId)
+      deletePlays(cardId, 0)
   })
   .catch( err => console.log(err) )
 
   
+}
+
+function deleteCategoria(categoriaId) {
+  CardsDB.allCardsCategory(categoriaId).then(res => {
+    deleteOnlyCategoria(categoriaId)
+    for (let card of res){
+      deleteCard(card.id)
+    } 
+
+    deletePlays(categoriaId, 1)
+  });
+}
+
+function deleteOnlyCategoria(categoriaId){
+    //create
+    CategoriaDB.removeCategoria(categoriaId)
+    .then( id => {
+      console.log('Categorias deleted : '+ id)
+    })
+    .catch( err => console.log(err)  )
 }
 
 function deleteDetalhes(cardId){
@@ -90,6 +113,26 @@ function deleteDetalhes(cardId){
   .catch( err => console.log(err) )
 
   
+}
+
+function deletePlays(id, by){
+  if(by == 0){
+      //delete
+    PlayDB.removePlaysCard(id)
+    .then( cardId => {
+        console.log('Plays deleted with cardId: '+ id)
+    })
+    .catch( err => console.log(err) )
+
+  }else{
+    //delete
+    PlayDB.removePlaysCategoria(id)
+    .then( cardId => {
+        console.log('Plays deleted with categoriaId: '+ id)
+    })
+    .catch( err => console.log(err) )
+
+  }
 }
 
 export default withParams(ConfirmDelete);

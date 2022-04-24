@@ -11,11 +11,33 @@ export const styles = StyleSheet.create({
     height: vh(65),
   },
 
-  semCategoriasMensagem: {
-    marginTop: 10,
-    color: "#f2f2f2",
+  msgCriar: {
+    backgroundColor: "#2b2b2b",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: vw(60),
+    marginLeft: vh(10),
+    marginTop: vh(18),
+    borderRadius: 20,
+  },
+
+  exampleAddBtn: {
+    color: "#2b2b2b",
     textAlign: "center",
     fontFamily: "Epilogue_500Medium",
-    fontSize: 20,
+    fontSize: 40,
+    backgroundColor: "#1a1a1a",
+    width: 60,
+    paddingBottom: 10,
+    borderRadius: 50,
+  },
+
+  semCategoriasMensagem: {
+    margin: 10,
+    color: "#1a1a1a",
+    textAlign: "center",
+    fontFamily: "Epilogue_700Bold",
+    fontSize: 25,
   },
 });

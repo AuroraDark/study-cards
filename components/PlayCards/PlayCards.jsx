@@ -114,7 +114,6 @@ class PlayCards extends React.Component {
     }else{ 
       return(
         <View style={styles.container}>
-          <Text>Opaaa</Text>
           <Link to={`/home-categoria/${this.state.categoriaId}`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_left]}>
                     <Text style={styles.btn_text}>Cancelar</Text>
                 </Link>
@@ -138,7 +137,7 @@ class PlayCards extends React.Component {
           <View style={verso_styles.scrollView}>
           <Text style={verso_styles.cardTitulo}>{card.titulo}</Text>
           <Text style={verso_styles.cardResposta}>{card.resposta}</Text>
-          {(detalhes.length > 0) ? <Text style={[verso_styles.cardTitulo, {marginBottom: 10, marginTop: 15}]}>Detalhes</Text> : null}
+          {(detalhes.length > 0) ? <Text style={[verso_styles.cardTitulo, {marginBottom: 10, marginTop: 15}]}>Tópicos</Text> : null}
                <FlatList
                   data={detalhes}
                   renderItem={renderDetalhe}

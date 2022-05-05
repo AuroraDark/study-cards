@@ -13,7 +13,6 @@ const Home = (props) => {
     <View style={styles.home}>
       <Text style={styles.categoryText}>Decks</Text>
       <SearchIcon width={30} height={30} fill={'#f2f2f2'} style={styles.searchIcon}/>
-      <BtnFavoritos />
       <View style={styles.cardList}>
         <CategoriasList />
       </View>

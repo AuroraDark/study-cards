@@ -79,7 +79,7 @@ class CardPlay extends React.Component {
         <View style={verso_styles.scrollView}>
         <Text style={verso_styles.cardTitulo}>{card.titulo}</Text>
         <Text style={verso_styles.cardResposta}>{card.resposta}</Text>
-        {(card.detalhes.length > 0) ? <Text style={[verso_styles.cardTitulo, {marginBottom: 10, marginTop: 15}]}>Detalhes</Text> : null}
+        {(card.detalhes.length > 0) ? <Text style={[verso_styles.cardTitulo, {marginBottom: 10, marginTop: 15}]}>Tópicos</Text> : null}
              <FlatList
                 data={card.detalhes}
                 renderItem={renderDetalhe}

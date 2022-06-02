@@ -12,8 +12,10 @@ import {
 import Home from "./components/Home/Home";
 import HomeCategoria from "./components/HomeCategoria/HomeCategoria";
 import AddCard from "./components/AddCard/AddCard";
+import EditCard from "./components/EditCard/EditCard";
 import ConfirmDelete from "./components/ConfirmDelete/ConfirmDelete";
 import AddCategoria from "./components/AddCategoria/AddCategoria";
+import EditCategoria from "./components/EditCategoria/EditCategoria";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as NavigationBar from "expo-navigation-bar";
 import PlayCards from "./components/PlayCards/PlayCards";
@@ -40,6 +42,13 @@ export default function App() {
             <Route path="/add-card/:categoriaId" element={<AddCard />} />
 
             <Route path="/add-categoria" element={<AddCategoria />} />
+
+            <Route
+              path="/edit-card/:cor/:id/:categoriaId"
+              element={<EditCard />}
+            />
+
+            <Route path="/edit-categoria/:id" element={<EditCategoria />} />
 
             <Route
               path="/confirm-delete/:who/:categoriaId/:id"

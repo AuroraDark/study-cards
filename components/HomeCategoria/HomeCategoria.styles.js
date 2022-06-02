@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
   categoryText: {
     color: "#f2f2f2",
     marginLeft: 20,
-    marginTop: 20,
+    marginTop: 85,
     fontFamily: "Epilogue_500Medium",
     fontSize: 30,
   },
@@ -21,17 +21,31 @@ export const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
-    right: 90,
+    right: 0,
   },
 
   searchIcon: {
     position: "absolute",
-    top: 30,
-    right: 30,
+    top: 35,
+    right: 35,
+  },
+
+  searchInput: {
+    width: vw(90),
+    color: "#f2f2f2",
+    textAlign: "left",
+    fontFamily: "Epilogue_700Bold",
+    fontSize: 17,
+    borderBottomWidth: 2,
+    borderBottomColor: "#454545",
+    position: "absolute",
+    top: 20,
+    left: 20,
+    padding: 12,
   },
 
   cardList: {
     height: "100%",
-    marginTop: vh(13),
+    marginTop: vh(17),
   },
 });

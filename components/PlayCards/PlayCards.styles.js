@@ -39,6 +39,7 @@ export const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    flexGrow: 1,
   },
 
   scrollView: {

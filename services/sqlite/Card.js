@@ -53,17 +53,17 @@ const createCard = (obj) => {
  *  - O resultado da Promise é a quantidade de registros atualizados;
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL.
  */
-const updateCard = (id, obj) => {
+const updateCard = (obj) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "UPDATE cars SET titulo=?, resposta=? WHERE id=?;",
-        [obj.titulo, obj.resposta, id],
+        "UPDATE cards SET titulo=?, resposta=? WHERE id=?;",
+        [obj.titulo, obj.resposta, obj.id],
         //-----------------------
         (_, { rowsAffected }) => {
           if (rowsAffected > 0) resolve(rowsAffected);
-          else reject("Error updating obj: id=" + id); // nenhum registro alterado
+          else reject("Error updating obj: id=" + obj.id); // nenhum registro alterado
         },
         (_, error) => reject(error) // erro interno em tx.executeSql
       );
@@ -130,20 +130,33 @@ const findCardByTitulo = (brand) => {
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL;
  *  - Pode retornar um array vazio caso não existam registros.
  */
-const allCardsCategory = (categoriaId) => {
+const allCardsCategory = (categoriaId, search) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
-      //comando SQL modificável
-      tx.executeSql(
-        "SELECT * FROM cards WHERE categoriaId=?;",
-        [categoriaId],
-        //-----------------------
-        (_, { rows }) => {
-          if (rows.length > 0) resolve(rows._array);
-          else resolve([]); // nenhum registro encontrado
-        },
-        (_, error) => reject(error) // erro interno em tx.executeSql
-      );
+      if (search == "") {
+        //comando SQL modificável
+        tx.executeSql(
+          "SELECT * FROM cards WHERE categoriaId=?;",
+          [categoriaId],
+          //-----------------------
+          (_, { rows }) => {
+            if (rows.length > 0) resolve(rows._array);
+            else resolve([]); // nenhum registro encontrado
+          },
+          (_, error) => reject(error) // erro interno em tx.executeSql
+        );
+      } else {
+        tx.executeSql(
+          "SELECT * FROM cards WHERE categoriaId=? AND titulo LIKE ?;",
+          [categoriaId, `%${search}%`],
+          //-----------------------
+          (_, { rows }) => {
+            if (rows.length > 0) resolve(rows._array);
+            else resolve([]); // nenhum registro encontrado
+          },
+          (_, error) => reject(error) // erro interno em tx.executeSql
+        );
+      }
     });
   });
 };

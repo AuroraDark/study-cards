@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, TextInput} from 'react-native';
 import { styles } from './HomeCategoria.styles';
 import BtnAddCard from '../BtnAdd/BtnAddCard';
 import BtnPlay from '../BtnPlay/BtnPlay';
@@ -19,7 +19,8 @@ class HomeCategoria extends React.Component {
   
   state = {
     categoria: {},
-    id: this.props.params.id
+    id: this.props.params.id,
+    search: ''
   }
 
   componentDidMount() {
@@ -39,9 +40,15 @@ class HomeCategoria extends React.Component {
         return (
           <View style={styles.home}>
             <ScrollView horizontal style={styles.scrollView}><Text style={styles.categoryText}>{this.state.categoria.nome}</Text></ScrollView>
-            <SearchIcon width={30} height={30} fill={'#f2f2f2'} style={styles.searchIcon}/>
+            <TextInput style={[styles.searchInput]} 
+        placeholder="Pesquisar Card"
+        placeholderTextColor="#454545"
+        onChangeText={text => {this.setState({search: text,})}} 
+        /> 
+        
+      <SearchIcon width={25} height={25} fill={'#f2f2f2'} style={styles.searchIcon}/>
             <View style={styles.cardList}>
-              <CardList categoriaId={this.state.categoria.id} cor={this.state.categoria.cor}/>
+              <CardList categoriaId={this.state.categoria.id} cor={this.state.categoria.cor} search={this.state.search}/>
             </View>
             <BtnCategorias /> 
             <BtnAddCard categoriaId={this.state.categoria.id}/>

@@ -16,7 +16,7 @@ const Categoria = (props) => {
     if (editMode){
       return(
         <View style={styles.edit_buttons}>
-       <Link to={`/`} style={styles.edit_button}>
+       <Link to={`/edit-categoria/${props.id}`} style={styles.edit_button}>
        <EditIcon width={20} height={20} fill={'#f2f2f2'} />
       </Link>
       <Link to={`/confirm-delete/Categoria/${props.id}/${props.id}`} style={styles.trash_button}>

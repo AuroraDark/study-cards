@@ -1,6 +1,6 @@
 import React, { useState, useEffect }  from 'react';
 import { View, Text, ScrollView, FlatList, TextInput, Button, TouchableOpacity } from 'react-native';
-import { styles } from './AddCard.styles';
+import { styles } from './EditCard.styles';
 import { useParams } from 'react-router-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import CategoriasIcon from '../../assets/icons/categorias.svg'
@@ -11,12 +11,13 @@ import DetalhesDB from '../../services/sqlite/Detalhes';
 import CategoriaDB from '../../services/sqlite/Categoria';
 import TrashIcon  from '../../assets/icons/trash-solid.svg'
 import EditIcon  from '../../assets/icons/pen-solid.svg'
+import Card from '../Card/Card';
 
 function withParams(Component) {
     return props => <Component {...props} params={useParams()} />;
   }
 
-class AddCard extends React.Component {
+class EditCard extends React.Component {
   
     state = {
         titulo: '',
@@ -28,26 +29,63 @@ class AddCard extends React.Component {
         editMode: false,
         idDetalhe: 0,
         detalhes: [],
+        detalhesDeleted: [],
         detalheSelected: -1,
-        categoria: {},
-        categoriaId: this.props.params.categoriaId
+        cardId: this.props.params.id,
+        categoriaId: this.props.params.categoriaId,
+        cor: this.props.params.cor,
+        card: undefined,
+        detalhesSetted: false,
+        categoriaNome: '',
+        idDetalhesBD: []
     }
 
     componentDidMount() {
         this.getCategoria(this.state.categoriaId);
-      }
-      
-      getCategoria = (idCategoria) => {
+    }
+
+
+
+    getCategoria = (idCategoria) => {
         CategoriaDB.findCategoria(idCategoria).then(res => {
           this.setState({
-            categoria: res,
+            categoriaNome: res.nome,
           });
+          this.getCard(this.state.cardId)
         }).catch(err=>err);
       }
+      
+    getCard = (cardId) => {
+    CardsDB.findCard(cardId).then(res => {
+        this.setState({
+            card: res,
+            titulo: res.titulo,
+            resposta: res.resposta
+        });
+        this.getDetalhes(this.state.cardId)
+    }).catch(err=>err);
+    }
+
+    getDetalhes = (cardId) => {
+        let newIdDetalhesBD = []
+        DetalhesDB.allDetalhesCard(cardId).then(res => { 
+            res.forEach((detalhe) => {
+                newIdDetalhesBD = newIdDetalhesBD.concat(detalhe.id)
+            })
+
+            this.setState({
+                detalhes: res,
+                detalhesSetted: true,
+                idDetalhesBD: newIdDetalhesBD,
+                idDetalhe: Math.max.apply(null, newIdDetalhesBD) + 1
+            });
+            
+        }).catch(err=>err);
+    }
 
     render (){
     
-    const { titulo, resposta, tituloDetalhe, respostaDetalhe, detalheVisibility, adicionarVisibility, editMode, idDetalhe, detalhes, detalheSelected, categoria, categoriaId } = this.state
+    const { titulo, resposta, tituloDetalhe, respostaDetalhe, detalheVisibility, adicionarVisibility, editMode, idDetalhe, detalhes, detalheSelected, cardId, categoriaId, cor, card, detalhesSetted, categoriaNome, idDetalhesBD, idDetalhesUpdate, idDetalhesInsert, idDetalhesDelete} = this.state
 
     const geraFlatList = () => {
         console.log(detalhes.length)
@@ -107,17 +145,6 @@ class AddCard extends React.Component {
         }
     }
 
-    const exibeSalvarDetalhe = () =>{
-        if (detalheVisibility){
-            return (
-                <TouchableOpacity style={[styles.btn_card, {backgroundColor: "#16a085"}]} title="Salvar Detalhe" onPress={() => salvarDetalhe()}>
-                <Text style={[styles.btn_card_text]}>Salvar Detalhe</Text>
-                </TouchableOpacity>
-            );
-        }
-       
-    }
-
     const exibeDetalhe = () =>{
         this.setState({adicionarVisibility: false})
         this.setState({detalheVisibility: true})
@@ -128,14 +155,6 @@ class AddCard extends React.Component {
         this.setState({detalheVisibility: false})
         this.setState({tituloDetalhe: ''})
         this.setState({respostaDetalhe: ''})
-    }
-
-    const changeEditMode = () =>{
-        if (editMode){
-            this.setState({editMode: false, tituloDetalhe: '', respostaDetalhe: ''})
-        }else{
-            this.setState({editMode: true})
-        }
     }
 
     const salvarDetalhe = () => {
@@ -255,22 +274,22 @@ class AddCard extends React.Component {
         
     }
     
-    if (categoria.id != undefined) {
+    if (card != undefined && detalhesSetted == true) {
         return (
             // Constrói a visualização do card
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <Text style={styles.titulo}>Novo Card</Text>
+                    <Text style={styles.titulo}>Editar Card</Text>
                     <View style={styles.categoria}>
                         <CategoriasIcon width={20} height={20} fill={'#f2f2f2'} />
-                        <Text style={styles.categoryText}>{categoria.nome}</Text>
+                        <Text style={styles.categoryText}>{categoriaNome}</Text>
                   </View>
                 </View>
               
             <View style={[styles.cardBody, styles.elevation]}>
                 <LinearGradient
                     // Background Linear Gradient
-                    colors={getColors(categoria.cor)}
+                    colors={getColors(cor)}
                     style={[styles.cardBody]}
                 >
                     <ScrollView style={styles.scrollView}>
@@ -278,6 +297,7 @@ class AddCard extends React.Component {
                         placeholder="Título da questão..."
                         placeholderTextColor="#f2f2f2"
                         multiline={true}
+                        value={titulo}
                         onChangeText={novoTitulo =>  this.setState({titulo:novoTitulo})}
                         />
                     <TextInput style={styles.cardResposta} 
@@ -285,6 +305,7 @@ class AddCard extends React.Component {
                         placeholderTextColor="#f2f2f2"
                         textAlignVertical="top"
                         multiline={true}
+                        value={resposta}
                         numberOfLines={3}
                         onChangeText={novaResposta => this.setState({resposta:novaResposta})}
                     />
@@ -299,7 +320,7 @@ class AddCard extends React.Component {
                 </LinearGradient>
             </View>
             <View style={styles.menu_footer}>
-                <Link to={`/home-categoria/${categoriaId}`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_right]} onPress={() => insertCard(titulo, resposta, categoriaId, detalhes)}>
+                <Link to={`/home-categoria/${categoriaId}`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_right]} onPress={() => updateCard(cardId, titulo, resposta, detalhes)}>
                     <Text style={styles.btn_text}>Salvar</Text>
                 </Link>
                 <Link to={`/home-categoria/${categoriaId}`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_left]}>
@@ -326,19 +347,31 @@ function getColors(colorStr){
   
 }
 
-function insertCard(titulo, resposta, categoriaId, detalhes){
-    // Adiciona Card
+function updateCard(cardId, titulo, resposta, detalhes){
+
+    console.log(cardId)
     var novoCard = {
+        id: cardId,
         titulo: titulo,
-        resposta: resposta,
-        categoriaId: categoriaId
+        resposta: resposta
     }
 
     //create
-    CardsDB.createCard(novoCard)
-    .then( id => {
-        console.log('Card created with id: '+ id) 
-        insertDetalhes(detalhes, id)
+    CardsDB.updateCard(novoCard)
+    .then( rows => {
+        deleteDetalhes(detalhes, cardId)
+    })
+    .catch( err => console.log(err))
+
+    
+}
+
+function deleteDetalhes(detalhes, cardId){
+
+    //delete
+    DetalhesDB.removeDetalhe(cardId)
+    .then( rows=> {
+        insertDetalhes(detalhes, cardId)
     })
     .catch( err => console.log(err) )
 
@@ -347,19 +380,23 @@ function insertCard(titulo, resposta, categoriaId, detalhes){
 
 function insertDetalhes(detalhes, cardId){
     // Adiciona Detalhes
+    console.log(cardId)
     for(let detalhe of detalhes){
 
         var novoDetalhe = {
                 cardId: cardId,
                 titulo: detalhe.titulo,
                 resposta: detalhe.resposta
-            }
+        }
+
+        console.log(novoDetalhe)
 
         //create
         DetalhesDB.createDetalhe(novoDetalhe)
         .then( id => console.log('Detalhe created with id: '+ id) )
         .catch( err => console.log(err) )
-}
+    }
 }
 
-export default withParams(AddCard)
+
+export default withParams(EditCard)

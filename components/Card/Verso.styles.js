@@ -16,9 +16,19 @@ export const verso_styles = StyleSheet.create({
     bottom: 23,
   },
 
-  trash_button: {
+  edit_button: {
     position: "absolute",
     left: 23,
+    //top: 0,
+    bottom: 23,
+    backgroundColor: "#16a085",
+    padding: 15,
+    borderRadius: 50,
+  },
+
+  trash_button: {
+    position: "absolute",
+    left: 90,
     //top: 0,
     bottom: 23,
     backgroundColor: "#c0392b",

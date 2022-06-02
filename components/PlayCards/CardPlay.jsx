@@ -6,6 +6,7 @@ import { verso_styles } from './Verso.styles';
 import { LinearGradient } from 'expo-linear-gradient';
 import TurnCardIcon  from '../../assets/icons/arrows-rotate-solid.svg'
 import DetalhesDB from '../../services/sqlite/Detalhes'
+import { vh } from 'react-native-expo-viewport-units';
 
 class CardPlay extends React.Component {
 
@@ -22,12 +23,14 @@ class CardPlay extends React.Component {
   componentDidMount() {
     console.log("Montou")
     this.getDetalhes();
+    this.setState({isTurned: false})
   }
 
   getDetalhes = () => {
     DetalhesDB.allDetalhesCard(this.state.id).then(res => {
       this.setState({
         detalhes: res,
+        isTurned: false
       });
     });
   }
@@ -39,12 +42,13 @@ class CardPlay extends React.Component {
         <View style = {verso_styles.categoryItem}>
             <Text style={verso_styles.cardTituloDetalhe}>{item.titulo}</Text>
             <Text style = {verso_styles.cardResposta}>{item.resposta}</Text>
+            {(card.detalhes.length > 0) ? <Text style={[verso_styles.cardTitulo, {marginBottom: 10, marginTop: 15}]}>Tópicos</Text> : null}
         </View>
     );
 }
   return (
     
-    <View style={[styles.elevation, styles.cardBody]}>
+    <ScrollView vertical scrollEnabled style={[styles.elevation, styles.cardBody]}>
         <LinearGradient
           // Background Linear Gradient
           colors={gradientColors}
@@ -58,35 +62,38 @@ class CardPlay extends React.Component {
     })}>
       <TurnCardIcon width={40} height={40} fill={'#f2f2f2'} />
     </TouchableOpacity>
-        </LinearGradient>
-        </View>
+      </LinearGradient>
+      </ScrollView>
     
   );
 
   function frente(card){
     return(
       <View style={styles.scrollView}>
-    <View>
       <Text style={styles.cardTitulo}>{card.titulo}</Text>
-    </View>
     </View>
     )
   }
 
   function verso(card){
+
+    const TitleCard = () => {
+      return(
+        <View style={{flex:1, width:vw(100)}}>
+            <Text style={verso_styles.cardTitulo}>{card.titulo}</Text>
+            <Text style={verso_styles.cardResposta}>{card.resposta}</Text>
+        </View>
+      )
+    }
     return(
       // Constrói a visualização do card
-        <View style={verso_styles.scrollView}>
-        <Text style={verso_styles.cardTitulo}>{card.titulo}</Text>
-        <Text style={verso_styles.cardResposta}>{card.resposta}</Text>
-        {(card.detalhes.length > 0) ? <Text style={[verso_styles.cardTitulo, {marginBottom: 10, marginTop: 15}]}>Tópicos</Text> : null}
-             <FlatList
-                data={card.detalhes}
-                renderItem={renderDetalhe}
-                keyExtractor={item => item.id}
-                contentContainerStyle={styles.cardList}>
-             </FlatList>
-        </View>
+        <FlatList 
+          data={card.detalhes}
+          renderItem={renderDetalhe}
+          keyExtractor={item => item.id}
+          contentContainerStyle={styles.cardList}
+          >
+        </FlatList>
     );
   }
   }

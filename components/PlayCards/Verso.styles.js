@@ -157,6 +157,7 @@ export const verso_styles = StyleSheet.create({
   scrollView: {
     marginTop: "5%",
     marginBottom: 70,
+    flexGrow: 1,
   },
 
   cardTitulo: {
@@ -174,7 +175,7 @@ export const verso_styles = StyleSheet.create({
 
   cardResposta: {
     marginTop: 10,
-    width: vw(70),
+    width: "100%",
     color: "#f2f2f2",
     textAlign: "left",
     fontFamily: "Epilogue_500Medium",

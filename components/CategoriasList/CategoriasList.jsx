@@ -10,21 +10,21 @@ import { Link } from 'react-router-native'
 class CategoriasList extends React.Component {
 
   state = {
-    categorias: [],
+    categorias: []
   }
 
   componentDidMount() {
     this.getCategorias();
   }
 
-  componentDidUpdate(prevState){
-    if (this.state.categorias !== prevState.categorias) {
-      this.getCategorias();
+  componentDidUpdate(prevState, prevProps){
+    if (this.state.categorias !== prevState.categorias || this.props.search !== prevProps.search) {
+      this.getCategorias(this.props.search);
     }
   }
 
-  getCategorias = () => {
-    CategoriaDB.allCategorias().then(res => {
+  getCategorias = (search) => {
+    CategoriaDB.allCategorias(search).then(res => {
       this.setState({
         categorias: res,
       });

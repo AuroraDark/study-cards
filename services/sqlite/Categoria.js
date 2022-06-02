@@ -60,17 +60,17 @@ const createCategoria = (obj) => {
  *  - O resultado da Promise é a quantidade de registros atualizados;
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL.
  */
-const updateCategoria = (id, obj) => {
+const updateCategoria = (obj) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
         "UPDATE categorias SET cor=?, nome=? WHERE id=?;",
-        [obj.cor, obj.nome, id],
+        [obj.cor, obj.nome, obj.id],
         //-----------------------
         (_, { rowsAffected }) => {
           if (rowsAffected > 0) resolve(rowsAffected);
-          else reject("Error updating obj: id=" + id); // nenhum registro alterado
+          else reject("Error updating obj: id=" + obj.id); // nenhum registro alterado
         },
         (_, error) => reject(error) // erro interno em tx.executeSql
       );
@@ -111,17 +111,27 @@ const findCategoria = (id) => {
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL;
  *  - Pode retornar um array vazio caso não existam registros.
  */
-const allCategorias = () => {
+const allCategorias = (search) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //comando SQL modificável
-      tx.executeSql(
-        "SELECT cat.*, COUNT(c.id) as quantCards FROM categorias as cat LEFT JOIN cards as c ON cat.id = c.categoriaId GROUP BY cat.id;",
-        [],
-        //-----------------------
-        (_, { rows }) => resolve(rows._array),
-        (_, error) => reject(error) // erro interno em tx.executeSql
-      );
+      if (search == "") {
+        tx.executeSql(
+          "SELECT cat.*, COUNT(c.id) as quantCards FROM categorias as cat LEFT JOIN cards as c ON cat.id = c.categoriaId GROUP BY cat.id;",
+          [],
+          //-----------------------
+          (_, { rows }) => resolve(rows._array),
+          (_, error) => reject(error) // erro interno em tx.executeSql
+        );
+      } else {
+        tx.executeSql(
+          "SELECT cat.*, COUNT(c.id) as quantCards FROM categorias as cat LEFT JOIN cards as c ON cat.id = c.categoriaId WHERE cat.nome LIKE ? GROUP BY cat.id;",
+          [`%${search}%`],
+          //-----------------------
+          (_, { rows }) => resolve(rows._array),
+          (_, error) => reject(error) // erro interno em tx.executeSql
+        );
+      }
     });
   });
 };

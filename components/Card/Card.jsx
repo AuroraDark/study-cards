@@ -9,6 +9,7 @@ import LampIconOff from '../../assets/icons/lamp-off.svg';
 import StarIcon from '../../assets/icons/star.svg';
 import TurnCardIcon  from '../../assets/icons/repeat-solid.svg'
 import TrashIcon  from '../../assets/icons/trash-solid.svg'
+import EditIcon  from '../../assets/icons/pen-solid.svg'
 import CardsDB from '../../services/sqlite/Card'
 import DetalhesDB from '../../services/sqlite/Detalhes'
 import { Link } from 'react-router-native';
@@ -57,6 +58,9 @@ class Card extends React.Component {
         >
         
         {this.state.isTurned ? verso(this.state): frente(this.state)}
+    <Link to={`/edit-card/${this.state.cor}/${this.state.id}/${this.state.categoriaId}`} style={verso_styles.edit_button}>
+      <EditIcon width={20} height={20} fill={'#f2f2f2'} />
+    </Link>
     <Link to={`/confirm-delete/Card/${this.state.categoriaId}/${this.state.id}`} style={verso_styles.trash_button}>
       <TrashIcon width={20} height={20} fill={'#f2f2f2'} />
     </Link>
@@ -82,17 +86,24 @@ class Card extends React.Component {
   }
 
   function verso(card){
+    const TitleCard = () => {
+      return(
+        <View style={{flex:1, width: "100%"}}>
+            <Text style={verso_styles.cardTitulo}>{card.titulo}</Text>
+            <Text style={verso_styles.cardResposta}>{card.resposta}</Text>
+            {(card.detalhes.length > 0) ? <Text style={[verso_styles.cardTitulo, {marginBottom: 10, marginTop: 15}]}>Tópicos</Text> : null}
+        </View>
+      )
+    }
     return(
       // Constrói a visualização do card
         <View style={verso_styles.scrollView}>
-        <Text style={verso_styles.cardTitulo}>{card.titulo}</Text>
-        <Text style={verso_styles.cardResposta}>{card.resposta}</Text>
-        {(card.detalhes.length > 0) ? <Text style={[verso_styles.cardTitulo, {marginBottom: 10, marginTop: 15}]}>Tópicos</Text> : null}
              <FlatList
                 data={card.detalhes}
                 renderItem={renderDetalhe}
                 keyExtractor={item => item.id}
-                contentContainerStyle={styles.cardList}>
+                contentContainerStyle={styles.cardList}
+                ListHeaderComponent={TitleCard}>
              </FlatList>
         </View>
     );

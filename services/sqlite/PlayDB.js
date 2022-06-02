@@ -18,7 +18,7 @@ import CardDB from "./Card";
 db.transaction((tx) => {
   tx.executeSql(
     // "CREATE TABLE play ( id INTEGER PRIMARY KEY AUTOINCREMENT, cardId INTEGER, categoriaId INTEGER, status INTEGER, espaco INTEGER, UNIQUE(cardId))"
-    "CREATE TABLE play ( id INTEGER PRIMARY KEY AUTOINCREMENT, cardId INTEGER, categoriaId INTEGER, status INTEGER, views INTEGER, erros INTEGER, espaco INTEGER,  UNIQUE(cardId))"
+    "CREATE TABLE IF NOT EXISTS play ( id INTEGER PRIMARY KEY AUTOINCREMENT, cardId INTEGER, categoriaId INTEGER, status INTEGER, views INTEGER, erros INTEGER, espaco INTEGER,  UNIQUE(cardId))"
   );
 });
 
@@ -32,7 +32,7 @@ db.transaction((tx) => {
 const createPlay = (categoriaId) => {
   return new Promise((resolve, reject) => {
     // puxando todos os cards da categoria
-    CardDB.allCardsCategory(categoriaId).then((res) => {
+    CardDB.allCardsCategory(categoriaId, "").then((res) => {
       db.transaction((tx) => {
         // setando nova jogada para cada card que não foi setado
         for (let obj of res) {

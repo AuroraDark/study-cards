@@ -13,23 +13,23 @@ class CardList extends React.Component {
     cards: null,
     categoriaId: this.props.categoriaId,
     cor: this.props.cor,
+    search: this.props.search
   }
 
   componentDidMount() {
-    this.getCards(this.state.categoriaId);
+    this.getCards(this.props.categoriaId, this.props.search);
   }
 
   componentDidUpdate(prevProps) {
-    if(this.props.categoriaId != prevProps.categoriaId){
-      this.getCards(this.state.categoriaId);
+    if(this.props.categoriaId != prevProps.categoriaId || this.props.search != prevProps.search){
+      this.getCards(this.state.categoriaId, this.props.search);
     }
     
   }
 
 
-  getCards = (categoriaId) => {
-    console.log(categoriaId)
-    CardsDB.allCardsCategory(categoriaId).then(res => {
+  getCards = (categoriaId, search) => {
+    CardsDB.allCardsCategory(categoriaId, search).then(res => {
       this.setState({
         cards: res,
       });

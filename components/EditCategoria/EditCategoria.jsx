@@ -1,19 +1,20 @@
 import React, { useState, useEffect }  from 'react';
 import { View, Text, ScrollView, FlatList, TextInput, Button, TouchableOpacity } from 'react-native';
-import { styles } from './AddCategoria.styles';
+import { styles } from './EditCategoria.styles';
 import { useParams } from 'react-router-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import CategoriasIcon from '../../assets/icons/categorias.svg'
 import { Link } from 'react-router-native';
-import { vw, vh, vmin, vmax } from "react-native-expo-viewport-units";
 import CategoriasDB from '../../services/sqlite/Categoria'
-import DetalhesDB from '../../services/sqlite/Detalhes'
 
-const AddCategoria = () => {
+function withParams(Component) {
+    return props => <Component {...props} params={useParams()} />;
+}
+
+const EditCategoria = (props) => {
 
     // Cria os states para atualizar enquanto o usuário modifica
     const [nome, setNome] = useState('')
-    const [colorSelected, setColorSelected] = useState("237A57-093028")
+    const [colorSelected, setColorSelected] = useState("")
     const colors = [
         {hexa:"C6426E-512DA8"},
         {hexa:"005C97-363795"},
@@ -25,8 +26,18 @@ const AddCategoria = () => {
         {hexa:"e35d5b-e53935"},
     ]
 
+    const id = props.params.id
+
+    useEffect(() => {
+        console.log(id)
+        CategoriasDB.findCategoria(id).then(res => {
+            console.log(res)
+            setNome(res.nome)
+            setColorSelected(res.cor)
+          });
+    },[])
+
     const renderColor = ({item}) => {
-        id = item.hexa
         var isSelected = false
 
         if (colorSelected == item.hexa){
@@ -49,13 +60,12 @@ const AddCategoria = () => {
     // Constrói a visualização do card
     <View style={styles.background}>
     <View style={styles.container}>
-    <Text style={styles.titulo}>Novo Deck</Text>
-    <Text style={styles.subtitulo}>Um deck é um conjunto de cartas com um tema em comum. </Text>
-    <Text style={styles.subtitulo}>Dê um nome ao seu deck e escolha a cor das cartas.</Text>
+    <Text style={styles.titulo}>Editar Deck</Text>
     <TextInput style={styles.cardNome} 
                 placeholder="Nome do Deck..."
                 placeholderTextColor="#666"
                 multiline={true}
+                value={nome}
                 onChangeText={novoNome => setNome(novoNome)}
                 />
         <View style={styles.color_card}>
@@ -79,7 +89,7 @@ const AddCategoria = () => {
     
     </View>
     <View style={styles.menu_footer}>
-        <Link to={`/`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_right]} onPress={() => insertCategoria(nome, colorSelected)}>
+        <Link to={`/`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_right]} onPress={() => updateCategoria(nome, colorSelected, id)}>
             <Text style={styles.btn_text}>Salvar</Text>
         </Link>
         <Link to={`/`} component={TouchableOpacity} style={[styles.btn_layout, styles.btn_left]}>
@@ -98,20 +108,21 @@ function getColors(colorStr){
   
 }
 
-function insertCategoria(nome, cor){
+function updateCategoria(nome, cor, id){
     // Adiciona Card
     var novaCategoria = {
+        id: id,
         cor: cor,
         nome: nome
     }
 
     //create
-    CategoriasDB.createCategoria(novaCategoria)
+    CategoriasDB.updateCategoria(novaCategoria)
     .then( id => {
-        console.log('Categoria created with id: '+ id)
+        console.log('Categoria atualizada: '+ id)
     })
     .catch( err => console.log(err) )
 
 }
 
-export default AddCategoria
+export default withParams(EditCategoria)

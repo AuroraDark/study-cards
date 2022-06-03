@@ -219,7 +219,7 @@ const selectNextCard = (id) => {
         db.transaction((tx) => {
           //comando SQL modificável
           tx.executeSql(
-            "SELECT cardid, status, erros, views, espaco, ((((erros * 1.00) / views) + 1) * (espaco * 1.00)) as peso FROM play WHERE categoriaId = ? ORDER BY peso DESC;",
+            "SELECT cardid, status, erros, views, espaco, ((((erros * 1.00) / views) + 1 + (0.5 / status)) * (espaco * 1.00)) as peso FROM play WHERE categoriaId = ? ORDER BY peso DESC;",
             [id],
             //-----------------------
             (_, { rows }) => {

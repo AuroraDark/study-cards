@@ -1,34 +1,17 @@
 import db from "./SQLiteDatabase";
 import CardDB from "./Card";
-/*
-- cardId
-- categoryId
-- status
-*/
 
 // STATUS = 0 -> Card não visto
 // STATUS = 1 -> Card foi respondido como ERRADO na ultima vez visto
 // STATUS = 2 -> Card foi respondido como CERTO na ultima vez visto
 // ESPAÇO = Quantidade de jogadas desde a ultima vez visto
 
-/**
- * INICIALIZAÇÃO DA TABELA
- * - Executa sempre, mas só cria a tabela caso não exista (primeira execução)
- */
 db.transaction((tx) => {
   tx.executeSql(
-    // "CREATE TABLE play ( id INTEGER PRIMARY KEY AUTOINCREMENT, cardId INTEGER, categoriaId INTEGER, status INTEGER, espaco INTEGER, UNIQUE(cardId))"
     "CREATE TABLE IF NOT EXISTS play ( id INTEGER PRIMARY KEY AUTOINCREMENT, cardId INTEGER, categoriaId INTEGER, status INTEGER, views INTEGER, erros INTEGER, espaco INTEGER,  UNIQUE(cardId))"
   );
 });
 
-/**
- * CRIAÇÃO DE UM NOVO REGISTRO
- * - Recebe um objeto;
- * - Retorna uma Promise:
- *  - O resultado da Promise é o ID do registro (criado por AUTOINCREMENT)
- *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
- */
 const createPlay = (categoriaId) => {
   return new Promise((resolve, reject) => {
     // puxando todos os cards da categoria
@@ -52,13 +35,6 @@ const createPlay = (categoriaId) => {
   });
 };
 
-/**
- * ATUALIZA UM REGISTRO JÁ EXISTENTE
- * - Recebe o ID do registro e um OBJETO com valores atualizados;
- * - Retorna uma Promise:
- *  - O resultado da Promise é a quantidade de registros atualizados;
- *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL.
- */
 const updatePlay = (cardId, categoriaId, status) => {
   return new Promise((resolve, reject) => {
     if (status == 2) {
@@ -121,17 +97,9 @@ const updatePlay = (cardId, categoriaId, status) => {
   });
 };
 
-/**
- * ATUALIZA UM REGISTRO JÁ EXISTENTE
- * - Recebe o ID do registro e um OBJETO com valores atualizados;
- * - Retorna uma Promise:
- *  - O resultado da Promise é a quantidade de registros atualizados;
- *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL.
- */
 const resetaPlay = (categoriaId) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
-      //comando SQL modificável
       tx.executeSql(
         "UPDATE play SET status = 0, views = 0, erros = 0, espaco = 1 WHERE categoriaId = ?;",
         [categoriaId],
@@ -233,12 +201,6 @@ const selectNextCard = (id) => {
     });
   });
 };
-
-// Atualizar Status
-
-// Finalizar jogo
-
-// Selecionar proxima carta
 
 export default {
   createPlay,

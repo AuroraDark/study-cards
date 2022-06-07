@@ -2,6 +2,9 @@
   "expo": {
     "name": "Study Cards",
     "slug": "study-cards",
+    "platforms": [
+      "android"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,18 +19,12 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1a1a1a"
       },
-      "package": "com.dessa.studycards"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
+      "package": "com.devdressa.studycards"
     },
     "androidStatusBar": {
       "backgroundColor": "#1a1a1a",
